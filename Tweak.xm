@@ -25,9 +25,7 @@ static BOOL hideOneHand;
         }
     }
 }
-%end
 
-%hook UIInputSwitcherView
 - (BOOL)_isHandBiasSwitchVisible {
     // Hide One-Handed Keyboard
     if (hideOneHand) {
