@@ -1,0 +1,10 @@
+{
+	entry = {
+		bundle = "HideKBSettings";
+		cell = PSLinkCell;
+		detail = "HideKBSettingsController";
+		icon = "icon.png";
+		isController = 1;
+		label = HideKBSettings;
+	};
+}
