@@ -5,7 +5,7 @@ ARCHS = arm64 arm64e
 
 TARGET = iphone:12.1.2:11.0
 
-THEOS_DEVICE_IP = 127.0.0.1 -p 2222
+THEOS_DEVICE_IP = localhost -p 2222
 
 TWEAK_NAME = HideKBSettings
 $(TWEAK_NAME)_FILES = Tweak.xm

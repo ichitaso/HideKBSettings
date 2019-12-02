@@ -39,6 +39,10 @@ static CGFloat const kHBFPHeaderHeight = 160.f;
 @property(retain) UIView *bannerView;
 @end
 
+@interface UITraitCollection (Private)
+@property(nonatomic, readonly) long long userInterfaceStyle;
+@end
+
 @class PSSpecifier;
 
 #define PREF_PATH @"/var/mobile/Library/Preferences/com.ichitaso.hidekbsettings.plist"
@@ -47,6 +51,8 @@ static CGFloat const kHBFPHeaderHeight = 160.f;
 
 #define TWEAK_TITLE @"HideKBSettings"
 #define TWEAK_DESCRIPTION @"Hide Keyboard Settings for iOS 11 & 12"
+
+#define PSDarkColor(alphaValue) [UIColor colorWithRed:1.00 green:1.00 blue:1.00 alpha:alphaValue]
 
 @implementation HideKBSettingsController
 - (instancetype)init {
@@ -119,8 +125,12 @@ void respringPrefsCallBack() {
     bannerTitle = [[UILabel alloc] init];
     bannerTitle.text = TWEAK_TITLE;
     [bannerTitle setFont:[UIFont fontWithName:@"HelveticaNeue-Ultralight" size:36]];
-    bannerTitle.textColor = [UIColor blackColor];
-    
+    // Dark mode
+    if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
+        bannerTitle.textColor = PSDarkColor(0.8);
+    } else {
+        bannerTitle.textColor = [UIColor blackColor];
+    }
     [_bannerView addSubview:bannerTitle];
     
     [bannerTitle setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -252,6 +262,11 @@ void respringPrefsCallBack() {
         NSDictionary *EnablePrefsCheck = [[NSDictionary alloc] initWithContentsOfFile:PREF_PATH];
         return EnablePrefsCheck[[specifier identifier]]?:[[specifier properties] objectForKey:@"default"];
     }
+}
+// Refresh on dark mode toggle
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    [self loadView];
+    [self reloadSpecifiers];
 }
 
 - (void)openTwitter {
