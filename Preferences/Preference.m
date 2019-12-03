@@ -2,6 +2,7 @@
 #import "Preferences.h"
 #import <SafariServices/SafariServices.h>
 #import <spawn.h>
+#import <firmware.h>
 
 static void easy_spawn(const char* args[]) {
     pid_t pid;
@@ -265,8 +266,10 @@ void respringPrefsCallBack() {
 }
 // Refresh on dark mode toggle
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
-    [self loadView];
-    [self reloadSpecifiers];
+    if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0) {
+        [self loadView];
+        [self reloadSpecifiers];
+    }
 }
 
 - (void)openTwitter {
