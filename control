@@ -1,15 +1,15 @@
 Author: ichitaso <willfeeltips+hks@gmail.com>
 Maintainer: ichitaso
-Name: HideKBSettings (iOS 11 to 13)
+Name: HideKBSettings (iOS 11 to 16)
 Package: com.ichitaso.hidekbsettings
 Pre-Depends: firmware (>= 11.0)
 Depends: mobilesubstrate, preferenceloader
 Section: Tweaks
-Version: 1.0.5
+Version: 1.0.6
 Architecture: iphoneos-arm
 Description: Hide "Keyboard Settings" from the globe button switcher
 Depiction: https://cydia.ichitaso.com/depiction/hidekbsettings.html
 Homepage: https://ichitaso.com/
 dev: ichitaso
-Tag: purpose::extension, compatible::ios11, compatible::ios12, compatible::ios13
-Icon: file:///Library/PreferenceBundles/HideKBSettings.bundle/icon@2x.png
+Tag: purpose::extension, compatible_min::ios11.0, compatible_max::ios16.3.1
+Icon: https://raw.githubusercontent.com/ichitaso/HideKBSettings/master/Preferences/Resources/icon%403x.png

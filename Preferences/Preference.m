@@ -3,6 +3,7 @@
 #import <SafariServices/SafariServices.h>
 #import <spawn.h>
 #import <firmware.h>
+#import <rootless.h>
 
 static void easy_spawn(const char* args[]) {
     pid_t pid;
@@ -51,7 +52,7 @@ static CGFloat const kHBFPHeaderHeight = 160.f;
 #define Notify_Resprings "com.ichitaso.hidekbsettings.respring"
 
 #define TWEAK_TITLE @"HideKBSettings"
-#define TWEAK_DESCRIPTION @"Hide Keyboard Settings for iOS 11 & 12"
+#define TWEAK_DESCRIPTION @"Hide Keyboard Settings for iOS 11 to 16"
 
 #define PSDarkColor(alphaValue) [UIColor colorWithRed:1.00 green:1.00 blue:1.00 alpha:alphaValue]
 
@@ -101,10 +102,11 @@ void respringPrefsCallBack() {
 }
 
 - (void)respring {
-    if ([[NSFileManager defaultManager] fileExistsAtPath:@"/usr/bin/sbreload"]) {
-        easy_spawn((const char *[]){"/usr/bin/sbreload", NULL});
+    if ([[NSFileManager defaultManager] fileExistsAtPath:@"/usr/bin/sbreload"] ||
+        [[NSFileManager defaultManager] fileExistsAtPath:@"/var/jb/usr/bin/sbreload"]) {
+        easy_spawn((const char *[]){ROOT_PATH("/usr/bin/sbreload"), NULL});
     } else {
-        easy_spawn((const char *[]){"/usr/bin/killall", "backboardd", NULL});
+        easy_spawn((const char *[]){ROOT_PATH("/usr/bin/killall"), "backboardd", NULL});
     }
 }
 
@@ -280,14 +282,6 @@ void respringPrefsCallBack() {
                                           message:nil
                                           preferredStyle:UIAlertControllerStyleActionSheet];
     
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tweetbot://"]]) {
-        [alertController addAction:[UIAlertAction actionWithTitle:@"Open in Tweetbot" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tweetbot:///user_profile/%@",twitterID]]
-                                               options:@{}
-                                     completionHandler:nil];
-        }]];
-    }
-    
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
         [alertController addAction:[UIAlertAction actionWithTitle:@"Open in Twitter" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"twitter://user?screen_name=%@",twitterID]]
@@ -305,7 +299,7 @@ void respringPrefsCallBack() {
     }]];
     
     // Fix Crash for iPad
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         CGRect rect = self.view.frame;
         alertController.popoverPresentationController.sourceView = self.view;
         alertController.popoverPresentationController.sourceRect = CGRectMake(CGRectGetMidX(rect)-60,rect.size.height-50, 120,50);
